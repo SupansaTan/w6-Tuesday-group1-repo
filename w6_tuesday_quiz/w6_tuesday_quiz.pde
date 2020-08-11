@@ -6,8 +6,8 @@ color white = color(255);
 color[] colors = {blue,pink,orange};
 
 class Ball {
-
-  float position_x, position_y;
+ 
+  float position_x, position_y,sum;
   int size, get_color;
   int xspeed = 1;
   int yspeed = 1;
@@ -36,24 +36,40 @@ class Ball {
     stroke(colors[get_color]);
     ellipse(position_x,position_y,size,size);
   }
+  
+  float getArea(){
+    int index = 0;
+    if (index < balls.length){
+      float area = PI * pow(size/2,2);
+      sum += area;
+      index += 1;
+    }
+    return sum;
+  }
 }
 
-Ball[] balls = new Ball[2];
+Ball[] balls = new Ball[10];
 
 void setup() {
   size(400,400);
-  for (int i = 0; i < 10; i++) {
+  for (int i = 0; i < balls.length; i++) {
     int rand_color = int(random(colors.length));
     balls[i] = new Ball(30*i,30*i,20*i,rand_color);
   }
 }
 
 void draw() {
-
   background(white);
  
-  for (int i = 0; i < 10; i++) {
-    balls[i].draw();
-    balls[i].bounce();
+  for (int i = 0; i < balls.length+1 ; i++) {
+    if (i < balls.length){
+      balls[i].draw();
+      balls[i].bounce();
+      balls[i].getArea();
+    }
+    else {
+      print("Sum of area of all Ball : " + balls[balls.length -1].sum);
+    }
   }
+  noLoop();
 }
