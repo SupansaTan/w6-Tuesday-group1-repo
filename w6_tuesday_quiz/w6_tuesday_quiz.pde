@@ -5,12 +5,16 @@ color white = color(255);
 
 color[] colors = {blue,pink,orange};
 
+float[] area_ball;
+
 class Ball {
- 
+
   float position_x, position_y,sum;
   int size, get_color;
   int xspeed = 1;
   int yspeed = 1;
+  int index = 0;
+  float area;
   
   Ball(float tempx, float tempy, int tempSize, int rand_color) {
     position_x = tempx;
@@ -38,9 +42,10 @@ class Ball {
   }
   
   float getArea(){
-    int index = 0;
+    sum = 0;
     if (index < balls.length){
-      float area = PI * pow(size/2,2);
+      area = PI * pow((balls[index].size)/2,2);
+      area_ball[index] = area;
       sum += area;
       index += 1;
     }
@@ -56,11 +61,12 @@ void setup() {
     int rand_color = int(random(colors.length));
     balls[i] = new Ball(30*i,30*i,20*i,rand_color);
   }
+  area_ball = new float[balls.length];
 }
 
 void draw() {
+  delay(50);
   background(white);
- 
   for (int i = 0; i < balls.length+1 ; i++) {
     if (i < balls.length){
       balls[i].draw();
@@ -68,8 +74,15 @@ void draw() {
       balls[i].getArea();
     }
     else {
-      print("Sum of area of all Ball : " + balls[balls.length -1].sum);
+      //println("Sum of area of all Ball : " + balls[balls.length -1].sum);
     }
   }
-  noLoop();
+}
+
+void mouseClicked(){
+    for (int i=0; i<balls.length; i++){
+      if ( balls[i].position_x <= mouseX && mouseX <= (balls[i].position_x + balls[i].size) && balls[i].position_y <= mouseY && mouseY <= (balls[i].position_y + balls[i].size)){
+        println(area_ball[i]);
+      }
+    }
 }
