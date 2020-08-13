@@ -5,13 +5,25 @@ color white = color(255);
 
 color[] colors = {blue, pink, orange};
 
+float[] area_ball;
+
 class Ball {
 
+<<<<<<< HEAD
   float position_x, position_y, sum;
   int size, get_color;
   int xspeed = 1;
   int yspeed = 1;
 
+=======
+  float position_x, position_y,sum;
+  int size, get_color;
+  int xspeed = 1;
+  int yspeed = 1;
+  int index = 0;
+  float area;
+  
+>>>>>>> 1d3a429d16672ee27857c2104cf2142f00ac1ff6
   Ball(float tempx, float tempy, int tempSize, int rand_color) {
     position_x = tempx;
     position_y = tempy;
@@ -36,12 +48,21 @@ class Ball {
     stroke(colors[get_color]);
     ellipse(position_x, position_y, size, size);
   }
+<<<<<<< HEAD
 
   float getArea() {
     sum =0;
     int index = 0;
     if (index < balls.length) {
       float area = PI * pow(size/2, 2);
+=======
+  
+  float getArea(){
+    sum = 0;
+    if (index < balls.length){
+      area = PI * pow((balls[index].size)/2,2);
+      area_ball[index] = area;
+>>>>>>> 1d3a429d16672ee27857c2104cf2142f00ac1ff6
       sum += area;
       index += 1;
     }
@@ -57,20 +78,30 @@ void setup() {
     int rand_color = int(random(colors.length));
     balls[i] = new Ball(30*i+40, 30*i+40, 20*i+40, rand_color);
   }
+<<<<<<< HEAD
   balls[balls.length-1].getArea();
  println("Sum of area of all Ball : " + balls[balls.length -1].sum); 
+=======
+  area_ball = new float[balls.length];
+>>>>>>> 1d3a429d16672ee27857c2104cf2142f00ac1ff6
 }
 
 void draw() {
+  delay(50);
   background(white);
+<<<<<<< HEAD
 
   for (int i = 0; i < balls.length;i++) {
+=======
+  for (int i = 0; i < balls.length+1 ; i++) {
+>>>>>>> 1d3a429d16672ee27857c2104cf2142f00ac1ff6
     if (i < balls.length){
       balls[i].draw();
       balls[i].getArea();
       
     }
     else {
+<<<<<<< HEAD
    
     }
   }
@@ -95,4 +126,17 @@ void mouseClicked() {
     }
   }
   
+=======
+      //println("Sum of area of all Ball : " + balls[balls.length -1].sum);
+    }
+  }
+}
+
+void mouseClicked(){
+    for (int i=0; i<balls.length; i++){
+      if ( balls[i].position_x <= mouseX && mouseX <= (balls[i].position_x + balls[i].size) && balls[i].position_y <= mouseY && mouseY <= (balls[i].position_y + balls[i].size)){
+        println(area_ball[i]);
+      }
+    }
+>>>>>>> 1d3a429d16672ee27857c2104cf2142f00ac1ff6
 }
