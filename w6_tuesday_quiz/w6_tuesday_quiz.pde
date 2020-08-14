@@ -7,7 +7,7 @@ color[] colors = {blue, pink, orange};
 
 class Ball {
 
-  float position_x, position_y, sumCir, sumRect;
+  float position_x, position_y, sum;
   int size, get_color;
   int xspeed = 1;
   int yspeed = 1;
@@ -31,52 +31,81 @@ class Ball {
   }
 
   void draw() {
-    //Circle
     fill(colors[get_color]);
     //stroke(colors[get_color]);
     ellipse(position_x, position_y, size, size);
   }
-  
-  void drawRect() {
-    //Rectangle
+
+  float getArea() {
+    int index = 0;
+    if (index < balls.length) {
+      float area = PI * pow(size/2, 2);
+      sum += area;
+      index += 1;
+    }
+    return sum;
+  }
+}
+
+class Box {
+
+  float position_x, position_y, sum;
+  int size, get_color;
+  int xspeed = 1;
+  int yspeed = 1;
+
+  Box(float tempx, float tempy, int tempSize, int rand_color) {
+    position_x = tempx;
+    position_y = tempy;
+    size = tempSize;
+    get_color = rand_color;
+  }
+
+  void bounce() {
+    position_x = position_x + xspeed;
+    position_y = position_y + yspeed;
+    if (position_x > width || position_x < 0) {
+      xspeed = xspeed * -1;
+    }
+    if (position_y > height || position_y < 0) {
+      yspeed = yspeed * -1;
+    }
+  }
+
+  void draw() {
     fill(colors[get_color]);
     //stroke(colors[get_color]);
     rect(position_x+100, position_y, size, size);
   }
 
-  float getAreaCircle() {
-    sumCir = 0;
-    int index = 0;
-    if (index < balls.length) {
-      float area = PI * pow(size/2, 2);
-      sumCir += area;
-      index += 1;
-    }
-    return sumCir;
-  }
-  
-  float getAreaRectangle() {
-    sumRect = 0;
+  float getArea() {
     int index = 0;
     if (index < balls.length) {
       float area = size * size;
-      sumRect += area;
+      sum += area;
       index += 1;
     }
-    return sumRect;
+    return sum;
   }
 }
 
 Ball[] balls = new Ball[5];
-
+Box[] boxes = new Box[5];
 void setup() {
   size(400, 400);
   for (int i = 0; i < balls.length; i++) {
     int rand_color = int(random(colors.length));
     balls[i] = new Ball(30*i+40, 30*i+40, 20*i+40, rand_color);
   }
-  balls[balls.length-1].getAreaCircle();
- println("Sum of area of all Ball : " + balls[balls.length -1].sumCir); 
+  balls[balls.length-1].getArea();
+  println("Sum of area of all Ball : " + balls[balls.length -1].sum);
+  
+  for (int j = 0; j < boxes.length; j++) {
+    int rand_color = int(random(colors.length));
+    boxes[j] = new Box(30*j+40, 30*j+40, 20*j+40, rand_color);
+  }
+  boxes[boxes.length-1].getArea();
+  println("Sum of area of all Rectangle : " + boxes[boxes.length -1].sum);
 }
 
 void draw() {
@@ -84,23 +113,21 @@ void draw() {
   for (int i = 0; i < balls.length;i++) {
     if (i < balls.length){
       balls[i].draw();
-      balls[i].getAreaCircle();
-      
+      balls[i].getArea();      
     }
     else {
     }
   }
-  for (int i = 0; i < balls.length;i++) {
-    if (i < balls.length){
-      balls[i].drawRect();
-      balls[i].getAreaRectangle();
-      
+  for (int j = 0; j < boxes.length;j++) {
+    if (j < balls.length){
+      boxes[j].draw();
+      boxes[j].getArea();      
     }
     else {
     }
-  }
-  
+  }  
 }
+
 void mouseClicked() {
   Ball[] lsball1;
   Ball[] lsball2;
@@ -109,15 +136,13 @@ void mouseClicked() {
     if (distance< (balls[i].size)/2) {
        lsball1 = (Ball[])subset(balls,0,i);
        lsball2 = (Ball[])subset(balls,i+1);
-        balls =  (Ball[])concat(lsball1,lsball2);
+       balls =  (Ball[])concat(lsball1,lsball2);
     if (balls.length == 0){
         println("Sum of area of all Ball :  0 ");
   }  else {
-        println("Sum of area of all Ball : " + balls[balls.length -1].sumCir);
-  }
-        
+        println("Sum of area of all Ball : " + balls[balls.length -1].sum);
+  }        
         break;
     }
-  }
-  
+  }  
 }
