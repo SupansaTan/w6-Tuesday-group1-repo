@@ -11,20 +11,27 @@ boolean check;
 class Ball {
   float position_x, position_y;
   int size;
-  int get_color;
+  int shade;
+  int twinkling;
 
-  Ball(float tempx, float tempy, int tempSize, int rand_color) {
+  Ball(float tempx, float tempy, int tempSize, int tempColor) {
     position_x = tempx;
     position_y = tempy;
     size = tempSize;
-    get_color = rand_color;
+    shade = tempColor;
+    twinkling = int(random(0,2));
   }
 
   void draw() {
-    get_color = int(random(colors.length));
-    fill(colors[get_color]);
-    //stroke(colors[get_color]);
-    ellipse(position_x, position_y, size, size);
+    if (twinkling == 1) {
+      fill(0);
+      ellipse(position_x, position_y, size, size);
+    }
+    else {
+      shade = int(random(colors.length));
+      fill(colors[shade]);
+      ellipse(position_x, position_y, size, size);
+    }
   }
 
   float getArea() {
@@ -36,20 +43,27 @@ class Ball {
 class Box {
   float position_x, position_y;
   int size;
-  int get_color;
+  int shade;
+  int twinkling;
 
-  Box(float tempx, float tempy, int tempSize, int rand_color) {
+  Box(float tempx, float tempy, int tempSize, int tempColor) {
     position_x = tempx;
     position_y = tempy;
     size = tempSize;
-    get_color = rand_color;
+    shade = tempColor;
+    twinkling = int(random(0,2));
   }
 
   void draw() {
-    get_color = int(random(colors.length));
-    fill(colors[get_color]);
-    //stroke(colors[get_color]);
-    rect(position_x+100, position_y, size, size);
+    if (twinkling == 1) {
+      fill(0);
+      rect(position_x+100, position_y, size, size);
+    }
+    else {
+      shade = int(random(colors.length));
+      fill(colors[shade]);
+      rect(position_x+100, position_y, size, size);
+    }
   }
 
   float getArea() {
@@ -58,21 +72,21 @@ class Box {
   }
 }
 
-Ball[] balls = new Ball[5];
-Box[] boxes = new Box[5];
+Ball[] balls = new Ball[int(random(3,8))];
+Box[] boxes = new Box[int(random(3,8))];
 
 void setup() {
   size(400, 400);
   for (int i = 0; i < balls.length; i++) {
-    int rand_color = int(random(colors.length));
-    balls[i] = new Ball(30*i+40, 30*i+40, 20*i+40, rand_color);
+    int tempColor = int(random(colors.length));
+    balls[i] = new Ball(int(random(250)), int(random(250)), int(random(50,100)), tempColor);
   }
   for (Ball ball : balls) {
     sum += ball.getArea();
   }
   for (int j = 0; j < boxes.length; j++) {
-    int rand_color = int(random(colors.length));
-    boxes[j] = new Box(30*j+40, 30*j+40, 20*j+40, rand_color);
+    int tempColor = int(random(colors.length));
+    boxes[j] = new Box(int(random(250)), int(random(250)), int(random(50,100)), tempColor);
   }
   for (Box box : boxes) {
     sum += box.getArea();
@@ -100,7 +114,7 @@ void mouseClicked() {
   
   for (int i = balls.length-1; i>=0; i--) {
     float distance_ball = dist(mouseX, mouseY, balls[i].position_x, balls[i].position_y);
-    if (distance_ball < (balls[i].size)/2) {
+    if (distance_ball < (balls[i].size)/2 && balls[i].twinkling == 0) {
       sum -= balls[i].getArea();
       println("Sum of all area is : ", sum);
       lsball1 = (Ball[])subset(balls,0,i);
@@ -113,7 +127,7 @@ void mouseClicked() {
     
   if (check == true)  {
     for (int j = boxes.length-1; j>=0; j--) {
-      if (mouseX > boxes[j].position_x &&  mouseX < boxes[j].position_x + (boxes[j].size)*3 && mouseY > boxes[j].position_y &&  mouseY < boxes[j].position_y + (boxes[j].size)*3) {
+      if (mouseX > boxes[j].position_x &&  mouseX < boxes[j].position_x + (boxes[j].size)*3 && mouseY > boxes[j].position_y &&  mouseY < boxes[j].position_y + (boxes[j].size)*3 && boxes[j].twinkling == 0) {
         sum -= boxes[j].getArea();
         println("Sum of all area is : ", sum);
         lsbox1 = (Box[])subset(boxes,0,j);
