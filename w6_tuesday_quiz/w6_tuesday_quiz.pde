@@ -21,6 +21,7 @@ class Ball {
   }
 
   void draw() {
+    get_color = int(random(colors.length));
     fill(colors[get_color]);
     //stroke(colors[get_color]);
     ellipse(position_x, position_y, size, size);
@@ -45,6 +46,7 @@ class Box {
   }
 
   void draw() {
+    get_color = int(random(colors.length));
     fill(colors[get_color]);
     //stroke(colors[get_color]);
     rect(position_x+100, position_y, size, size);
@@ -79,6 +81,7 @@ void setup() {
 }
 
 void draw() {
+  delay(200);
   background(white);
   for (Ball ball : balls) {
     ball.draw();
