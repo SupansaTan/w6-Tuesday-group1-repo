@@ -19,7 +19,7 @@ class Ball {
     position_y = tempy;
     size = tempSize;
     shade = tempColor;
-    twinkling = int(random(0,2));
+    twinkling = 0;
   }
 
   void draw() {
@@ -45,24 +45,33 @@ class Box {
   int size;
   int shade;
   int twinkling;
+  Ball[] ballss = new Ball[5];
 
   Box(float tempx, float tempy, int tempSize, int tempColor) {
     position_x = tempx;
     position_y = tempy;
     size = tempSize;
     shade = tempColor;
-    twinkling = int(random(0,2));
+    twinkling = 1;
   }
 
   void draw() {
     if (twinkling == 1) {
       fill(0);
-      rect(position_x+100, position_y, size, size);
+      rect(position_x, position_y, size, size);
     }
     else {
       shade = int(random(colors.length));
       fill(colors[shade]);
-      rect(position_x+100, position_y, size, size);
+      rect(position_x, position_y, size, size);
+    }
+    
+    for(int i=0; i < ballss.length; i++){
+      ballss[i] = new Ball(int(random(position_x + 25,size-25)), int(random(position_y + 25, size-25)), int(random(20,50)), twinkling);
+    }
+    
+    for(int i=0; i < ballss.length; i++){
+      ballss[i].draw();
     }
   }
 
@@ -73,36 +82,31 @@ class Box {
 }
 
 Ball[] balls = new Ball[int(random(3,8))];
-Box[] boxes = new Box[int(random(3,8))];
+Ball[] ballss = new Ball[3];
+Box[] boxes = new Box[1];
 
 void setup() {
   size(400, 400);
-  for (int i = 0; i < balls.length; i++) {
-    int tempColor = int(random(colors.length));
-    balls[i] = new Ball(int(random(250)), int(random(250)), int(random(50,100)), tempColor);
-  }
-  for (Ball ball : balls) {
-    sum += ball.getArea();
-  }
+  
   for (int j = 0; j < boxes.length; j++) {
     int tempColor = int(random(colors.length));
-    boxes[j] = new Box(int(random(250)), int(random(250)), int(random(50,100)), tempColor);
+    boxes[j] = new Box(50, 50, 200, tempColor);
   }
+  
   for (Box box : boxes) {
     sum += box.getArea();
   }
+
   println("Sum of all area is : ", sum);
 }
 
 void draw() {
   delay(200);
   background(white);
-  for (Ball ball : balls) {
-    ball.draw();
-  }
-  for (Box box : boxes) {
+  for (Box box : boxes){
     box.draw();
   }
+  noLoop();
 }
 
 void mouseClicked() {
