@@ -1,75 +1,146 @@
-color blue = color(14,77,146);
-color pink = color(91,194,54);
-color orange = color(245,173,148);
+color blue = color(20, 80, 255);
+color pink = color(255, 100, 150);
+color orange = color(255, 150, 80);
 color white = color(255);
 
-color[] colors = {blue,pink,orange};
+color[] colors = {blue, pink, orange};
+
+float sum;
+boolean check;
 
 class Ball {
- 
-  float position_x, position_y,sum;
-  int size, get_color;
-  int xspeed = 1;
-  int yspeed = 1;
-  
-  Ball(float tempx, float tempy, int tempSize, int rand_color) {
+  float position_x, position_y;
+  int size;
+  int shade;
+  int twinkling;
+
+  Ball(float tempx, float tempy, int tempSize, int tempColor) {
     position_x = tempx;
     position_y = tempy;
     size = tempSize;
-    get_color = rand_color;
+    shade = tempColor;
+    twinkling = 0;
   }
-  
-  void bounce() {
-    position_x = position_x + xspeed;
-    position_y = position_y + yspeed;
-    if (position_x > width || position_x < 0) {
-      xspeed = xspeed * -1;
-    }
-    if (position_y > height || position_y < 0) {
-      yspeed = yspeed * -1;
-    }
-  }
-  
+
   void draw() {
- 
-    fill(colors[get_color]);
-    stroke(colors[get_color]);
-    ellipse(position_x,position_y,size,size);
-  }
-  
-  float getArea(){
-    int index = 0;
-    if (index < balls.length){
-      float area = PI * pow(size/2,2);
-      sum += area;
-      index += 1;
+    if (twinkling == 1) {
+      fill(0);
+      ellipse(position_x, position_y, size, size);
     }
-    return sum;
+    else {
+      shade = int(random(colors.length));
+      fill(colors[shade]);
+      ellipse(position_x, position_y, size, size);
+    }
+  }
+
+  float getArea() {
+    float area = 22/7 * (size/2) * (size/2);
+    return area;
   }
 }
 
-Ball[] balls = new Ball[10];
+class Box {
+  float position_x, position_y;
+  int size;
+  int shade;
+  int twinkling;
+  Ball[] ballss = new Ball[5];
+
+  Box(float tempx, float tempy, int tempSize, int tempColor) {
+    position_x = tempx;
+    position_y = tempy;
+    size = tempSize;
+    shade = tempColor;
+    twinkling = 1;
+  }
+
+  void draw() {
+    if (twinkling == 1) {
+      fill(0);
+      rect(position_x, position_y, size, size);
+    }
+    else {
+      shade = int(random(colors.length));
+      fill(colors[shade]);
+      rect(position_x, position_y, size, size);
+    }
+    
+    for(int i=0; i < ballss.length; i++){
+      ballss[i] = new Ball(int(random(position_x + 25,size-25)), int(random(position_y + 25, size-25)), int(random(20,50)), twinkling);
+    }
+    
+    for(int i=0; i < ballss.length; i++){
+      ballss[i].draw();
+    }
+  }
+
+  float getArea() {
+    float area = 22/7 * (size/2) * (size/2);
+    return area;
+  }
+}
+
+Ball[] balls = new Ball[int(random(3,8))];
+Ball[] ballss = new Ball[3];
+Box[] boxes = new Box[1];
 
 void setup() {
-  size(400,400);
-  for (int i = 0; i < balls.length; i++) {
-    int rand_color = int(random(colors.length));
-    balls[i] = new Ball(30*i,30*i,20*i,rand_color);
+  size(400, 400);
+  
+  for (int j = 0; j < boxes.length; j++) {
+    int tempColor = int(random(colors.length));
+    boxes[j] = new Box(50, 50, 200, tempColor);
   }
+  
+  for (Box box : boxes) {
+    sum += box.getArea();
+  }
+
+  println("Sum of all area is : ", sum);
+  
 }
 
 void draw() {
+  delay(200);
   background(white);
- 
-  for (int i = 0; i < balls.length+1 ; i++) {
-    if (i < balls.length){
-      balls[i].draw();
-      balls[i].bounce();
-      balls[i].getArea();
-    }
-    else {
-      print("Sum of area of all Ball : " + balls[balls.length -1].sum);
-    }
+  for (Box box : boxes){
+    box.draw();
   }
   noLoop();
+}
+
+void mouseClicked() {
+  Ball[] lsball1;
+  Ball[] lsball2;
+  Box[] lsbox1;
+  Box[] lsbox2;
+  check = true;
+  
+  for (int i = balls.length-1; i>=0; i--) {
+    float distance_ball = dist(mouseX, mouseY, balls[i].position_x, balls[i].position_y);
+    if (distance_ball < (balls[i].size)/2 && balls[i].twinkling == 0) {
+      sum -= balls[i].getArea();
+      println("Sum of all area is : ", sum);
+      lsball1 = (Ball[])subset(balls,0,i);
+      lsball2 = (Ball[])subset(balls,i+1);
+      balls =  (Ball[])concat(lsball1,lsball2);
+      check = false;
+      break;
+    }
+  }
+    
+  if (check == true)  {
+    for (int j = boxes.length-1; j>=0; j--) {
+      if (mouseX > boxes[j].position_x &&  mouseX < boxes[j].position_x + (boxes[j].size)*3 && mouseY > boxes[j].position_y &&  mouseY < boxes[j].position_y + (boxes[j].size)*3 && boxes[j].twinkling == 0) {
+        sum -= boxes[j].getArea();
+        println("Sum of all area is : ", sum);
+        lsbox1 = (Box[])subset(boxes,0,j);
+        lsbox2 = (Box[])subset(boxes,j+1);
+        boxes =  (Box[])concat(lsbox1,lsbox2);
+        check = false;
+        break;
+      }
+    }
+  }
 }
