@@ -98,7 +98,6 @@ void setup() {
   }
 
   println("Sum of all area is : ", sum);
-  
 }
 
 void draw() {
