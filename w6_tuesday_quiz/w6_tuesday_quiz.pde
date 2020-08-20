@@ -45,7 +45,7 @@ class Box {
   int size;
   int shade;
   int twinkling;
-  Ball[] ballss = new Ball[5];
+  Ball[] ballss = new Ball[int(random(1,10))];
 
   Box(float tempx, float tempy, int tempSize, int tempColor) {
     position_x = tempx;
@@ -53,6 +53,16 @@ class Box {
     size = tempSize;
     shade = tempColor;
     twinkling = 1;
+  }
+  
+  void setBall(){
+    for(int i=0; i < ballss.length; i++){
+      ballss[i] = new Ball(int(random(position_x+(size/4),position_x+size-(size/4))), int(random(position_y+(size/4),position_y+size-(size/4))), int(random(20,(size/2))), twinkling);
+    }
+    
+    for(Ball ball : ballss){
+      ball.draw();
+    }
   }
 
   void draw() {
@@ -65,14 +75,6 @@ class Box {
       fill(colors[shade]);
       rect(position_x, position_y, size, size);
     }
-    
-    for(int i=0; i < ballss.length; i++){
-      ballss[i] = new Ball(int(random(position_x + 25,size-25)), int(random(position_y + 25, size-25)), int(random(20,50)), twinkling);
-    }
-    
-    for(int i=0; i < ballss.length; i++){
-      ballss[i].draw();
-    }
   }
 
   float getArea() {
@@ -82,31 +84,26 @@ class Box {
 }
 
 Ball[] balls = new Ball[int(random(3,8))];
-Ball[] ballss = new Ball[3];
-Box[] boxes = new Box[1];
+Box[] boxes = new Box[int(random(1,5))];
 
 void setup() {
   size(400, 400);
   
   for (int j = 0; j < boxes.length; j++) {
     int tempColor = int(random(colors.length));
-    boxes[j] = new Box(50, 50, 200, tempColor);
+    boxes[j] = new Box(int(random(width/2)), int(random(height/2)), int(random(100,200)), tempColor);
   }
   
   for (Box box : boxes) {
+    box.draw();
+    box.setBall();
     sum += box.getArea();
   }
-
+  
   println("Sum of all area is : ", sum);
 }
 
 void draw() {
-  delay(200);
-  background(white);
-  for (Box box : boxes){
-    box.draw();
-  }
-  noLoop();
 }
 
 void mouseClicked() {
